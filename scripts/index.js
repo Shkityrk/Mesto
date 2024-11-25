@@ -99,5 +99,9 @@ listCloseButtons.forEach(button => {
     });
 });
 
+listPopups.forEach(popup => {
+    popup.classList.add("popup_is-animated")
+})
+
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 newCardFormElement.addEventListener('submit', handleNewCardFormSubmit);
