@@ -1,0 +1,8 @@
+services:
+  mesto-russia:
+    build: .
+    container_name: mesto
+    ports:
+      - "8015:80"
+    volumes:
+      - ..://usr/share/nginx/html
