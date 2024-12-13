@@ -10,7 +10,6 @@
 @import url('./__error/popup__error.css');
 @import url('./__field/popup__field.css');
 
-
 .popup {
   font-family: 'Inter', Arial, sans-serif;
   display: none;
@@ -23,5 +22,5 @@
   bottom: 0;
   right: 0;
   z-index: 10;
-  cursor: pointer;
+	cursor: pointer;
 }

@@ -7,7 +7,6 @@
 @import url('./__likes/card__likes.css');
 @import url('./__likes-num/card__likes-num.css');
 
-
 .card {
   font-family: 'Inter', Arial, sans-serif;
   -webkit-border-radius: 10px;
