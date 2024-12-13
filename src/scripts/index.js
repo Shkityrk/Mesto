@@ -1,8 +1,7 @@
 import '../pages/index.css'; // добавьте импорт главного файла стилей 
 import { enableValidation } from './validation';
-import { renderCards, createCard } from './cards';
 import { openModal, closeModal, closeModalByOverlay } from './modal';
-import { loadCardsFromServer, loadUser, addNewCard, editProfile } from './api';
+import { loadCardsFromServer, loadUser, addNewCard, editProfile, loadPage } from './api';
 
 const placesList = document.querySelector(".places__list");
 
@@ -42,6 +41,7 @@ const cardSettings = {
     cardLikeButton: '.card__like-button',
     cardLikeButtonActive: 'card__like-button_is-active',
     cardDeleteButton: '.card__delete-button',
+    cardLikes: '.card__likes-num',
     card: '.card'
 }
 
@@ -65,13 +65,11 @@ const handleProfileFormSubmit = (evt) => {
 
 const handleNewCardFormSubmit = (evt) => {
     evt.preventDefault();
-    addNewCard(inputCardName.value, inputUrl.value)
+    addNewCard(inputCardName.value, inputUrl.value, placesList, cardSettings)
     closeModal(cardPopup);
 }
 
 // Инициализация событий
-renderCards(placesList, cardSettings);
-
 enableValidation(validationSettings);
 
 profilePopupButton.addEventListener("click", openEditPopup);
@@ -93,5 +91,5 @@ listPopups.forEach(popup => {
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 newCardFormElement.addEventListener('submit', handleNewCardFormSubmit);
 
-loadCardsFromServer(placesList, cardSettings)
-loadUser()
+
+loadPage(placesList, cardSettings)
