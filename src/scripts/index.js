@@ -1,7 +1,7 @@
 import '../pages/index.css';
-import { enableValidation } from './validation';
-import { openModal, closeModal, closeModalByOverlay } from './modal';
-import { addNewCard, editProfile, loadPage, setAvatar } from './api';
+import {enableValidation} from './validation';
+import {openModal, closeModal, closeModalByOverlay} from './modal';
+import {addNewCard, editProfile, loadPage, setAvatar} from './api';
 
 const placesList = document.querySelector(".places__list");
 
