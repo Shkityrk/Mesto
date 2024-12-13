@@ -2,6 +2,7 @@ import '../pages/index.css'; // добавьте импорт главного �
 import { enableValidation } from './validation';
 import { renderCards, createCard } from './cards';
 import { openModal, closeModal, closeModalByOverlay } from './modal';
+import { loadCardsFromServer, loadUser, addNewCard } from './api';
 
 const placesList = document.querySelector(".places__list");
 
@@ -27,46 +28,47 @@ const newCardFormElement = document.querySelector(".popup__form[name='new-place'
 
 // Создание объекта с настройками валидации
 const validationSettings = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
 }
 
 const cardSettings = {
-	cardImage: '.card__image',
-	cardTitle: '.card__title',
-	cardLikeButton: '.card__like-button',
-	cardLikeButtonActive: 'card__like-button_is-active',
-	cardDeleteButton: '.card__delete-button',
-	card: '.card'
+    cardImage: '.card__image',
+    cardTitle: '.card__title',
+    cardLikeButton: '.card__like-button',
+    cardLikeButtonActive: 'card__like-button_is-active',
+    cardDeleteButton: '.card__delete-button',
+    card: '.card'
 }
 
 const openEditPopup = () => {
-  inputName.value = document.querySelector(".profile__title").textContent;
-  inputDescription.value = document.querySelector(".profile__description").textContent;
-  openModal(profilePopup);
+    inputName.value = document.querySelector(".profile__title").textContent;
+    inputDescription.value = document.querySelector(".profile__description").textContent;
+    openModal(profilePopup);
 }
 
 export const openImageModal = (src, caption) => {
-	document.querySelector(".popup__image").src = src
-	document.querySelector(".popup__caption").textContent = caption
-	openModal(imagePopup)
+    document.querySelector(".popup__image").src = src
+    document.querySelector(".popup__caption").textContent = caption
+    openModal(imagePopup)
 }
 
 const handleProfileFormSubmit = (evt) => {
-  evt.preventDefault();
-  document.querySelector(".profile__title").textContent = inputName.value;
-  document.querySelector(".profile__description").textContent = inputDescription.value;
-  closeModal(profilePopup);
+    evt.preventDefault();
+    document.querySelector(".profile__title").textContent = inputName.value;
+    document.querySelector(".profile__description").textContent = inputDescription.value;
+    closeModal(profilePopup);
 }
 
 const handleNewCardFormSubmit = (evt) => {
-  evt.preventDefault();
-  placesList.prepend(createCard(inputCardName.value, inputUrl.value, cardSettings));
-  closeModal(cardPopup);
+    evt.preventDefault();
+    addNewCard(inputCardName.value, inputUrl.value)
+    // placesList.prepend(createCard(inputCardName.value, inputUrl.value, cardSettings));
+    closeModal(cardPopup);
 }
 
 // Инициализация событий
@@ -79,16 +81,19 @@ profilePopupButton.addEventListener("click", openEditPopup);
 cardPopupButton.addEventListener("click", () => openModal(cardPopup));
 
 listCloseButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    const popup = button.closest(".popup");
-    closeModal(popup);
-  });
+    button.addEventListener("click", () => {
+        const popup = button.closest(".popup");
+        closeModal(popup);
+    });
 });
 
 listPopups.forEach(popup => {
-	popup.classList.add("popup_is-animated")
-	popup.addEventListener("click", closeModalByOverlay)
+    popup.classList.add("popup_is-animated")
+    popup.addEventListener("click", closeModalByOverlay)
 })
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 newCardFormElement.addEventListener('submit', handleNewCardFormSubmit);
+
+loadCardsFromServer(placesList, cardSettings)
+loadUser()
