@@ -153,3 +153,23 @@ export const removeLike = (cardId, numLikes) => {
         console.error("Error: " + err)
     })
 }
+
+
+export const removeCard = (cardId, cardElement) => {
+    fetch(`${config.baseUrl}/cards/${cardId}`,{
+        method: "DELETE",
+        headers: {
+            authorization: config.headers.authorization,
+            'Content-Type': 'application/json'
+        }
+    }).then((res) => {
+        if (res.status === 200) {
+            return res.json()
+        }
+        return Promise.reject(res.status)
+    }).then(() => {
+        cardElement.closest(".card").remove();
+    }).catch((err)=>{
+        console.error("Error: " + err)
+    })
+}

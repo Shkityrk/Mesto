@@ -1,8 +1,8 @@
 import { openImageModal } from ".";
-import { setLike, removeLike, User } from "./api";
+import { setLike, removeLike, User, removeCard } from "./api";
 
 const cardTemplate = document.querySelector("#card-template").content.querySelector(".card");
-// name, link, likes
+
 export const createCard = (cardData, cardSettings) => {
     const cardElement = cardTemplate.cloneNode(true);
     const cardImage = cardElement.querySelector(cardSettings.cardImage);
@@ -31,7 +31,7 @@ export const createCard = (cardData, cardSettings) => {
     });
 
     cardElement.querySelector(cardSettings.cardDeleteButton).addEventListener("click", (e) => {
-        e.target.closest(cardSettings.card).remove();
+        removeCard(cardData._id, e.target)
     });
 
     cardElement.querySelector(cardSettings.cardImage).addEventListener("click", (e) => {
