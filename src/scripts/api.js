@@ -53,7 +53,8 @@ export const loadUser = () => {
         User.avatar = data.avatar
         User._id = data._id
         User.cohort = data.cohort
-        console.log(User)
+        document.querySelector(".profile__title").textContent = User.name;
+        document.querySelector(".profile__description").textContent = User.about;
     })
 }
 
@@ -77,6 +78,33 @@ export const addNewCard = (name, link, placesList, cardSettings) => {
         console.log(card)
         placesList.prepend(createCard(card.name,  card.link, cardSettings));
     }).catch((err) => {
+        console.error("Error: " + err)
+    })
+}
+
+export const editProfile = (name, about) => {
+    fetch(`${config.baseUrl}/users/me`, {
+        method: "PATCH",
+        headers:{
+            authorization: config.headers.authorization,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            about: about
+        })
+    }).then((res) => {
+        if (res.status === 200) {
+            return res.json()
+        }
+        return Promise.reject(res.status)
+    }).then((user) => {
+        User.name = user.name
+        User.about = user.about
+        document.querySelector(".profile__title").textContent = user.name;
+        document.querySelector(".profile__description").textContent = user.about;
+        console.log("update profile success")
+    }).catch((err)=>{
         console.error("Error: " + err)
     })
 }

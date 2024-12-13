@@ -2,7 +2,7 @@ import '../pages/index.css'; // добавьте импорт главного �
 import { enableValidation } from './validation';
 import { renderCards, createCard } from './cards';
 import { openModal, closeModal, closeModalByOverlay } from './modal';
-import { loadCardsFromServer, loadUser, addNewCard } from './api';
+import { loadCardsFromServer, loadUser, addNewCard, editProfile } from './api';
 
 const placesList = document.querySelector(".places__list");
 
@@ -59,15 +59,13 @@ export const openImageModal = (src, caption) => {
 
 const handleProfileFormSubmit = (evt) => {
     evt.preventDefault();
-    document.querySelector(".profile__title").textContent = inputName.value;
-    document.querySelector(".profile__description").textContent = inputDescription.value;
+    editProfile(inputName.value, inputDescription.value)
     closeModal(profilePopup);
 }
 
 const handleNewCardFormSubmit = (evt) => {
     evt.preventDefault();
     addNewCard(inputCardName.value, inputUrl.value)
-    // placesList.prepend(createCard(inputCardName.value, inputUrl.value, cardSettings));
     closeModal(cardPopup);
 }
 
