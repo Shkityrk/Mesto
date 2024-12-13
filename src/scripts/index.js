@@ -1,6 +1,7 @@
 import '../pages/index.css'; // добавьте импорт главного файла стилей 
-
-import {initialCards} from "./cards"
+import { enableValidation } from './validation';
+import { renderCards, createCard } from './cards';
+import { openModal, closeModal, closeModalByOverlay } from './modal';
 
 const placesList = document.querySelector(".places__list");
 
@@ -24,73 +25,54 @@ const inputUrl = cardPopup.querySelector(".popup__input_type_url");
 
 const newCardFormElement = document.querySelector(".popup__form[name='new-place']");
 
-const cardTemplate = document.querySelector("#card-template").content.querySelector(".card");
-
-function createCard(name, link) {
-  const cardElement = cardTemplate.cloneNode(true);
-  const cardImage = cardElement.querySelector('.card__image');
-  cardElement.querySelector('.card__title').textContent = name;
-  cardImage.src = link;
-  cardImage.alt = name;
-
-  cardElement.querySelector(".card__like-button").addEventListener("click", (e) => {
-    e.target.classList.toggle("card__like-button_is-active");
-  });
-
-  cardElement.querySelector(".card__delete-button").addEventListener("click", (e) => {
-    e.target.closest(".card").remove();
-  });
-
-	cardElement.querySelector(".card__image").addEventListener("click", (e) => {
-		console.log(cardElement)
-		openImageModal(cardElement.querySelector(".card__image").src, cardElement.querySelector(".card__title").textContent)
-	})
-
-  return cardElement;
+// Создание объекта с настройками валидации
+const validationSettings = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
 }
 
-function renderCards() {
-  initialCards.forEach(element => {
-    placesList.append(createCard(element.name, element.link));
-  });
+const cardSettings = {
+	cardImage: '.card__image',
+	cardTitle: '.card__title',
+	cardLikeButton: '.card__like-button',
+	cardLikeButtonActive: 'card__like-button_is-active',
+	cardDeleteButton: '.card__delete-button',
+	card: '.card'
 }
 
-function openModal(popup) {
-  popup.classList.add('popup_is-opened');
-}
-
-function closeModal(popup) {
-  popup.classList.remove('popup_is-opened');
-}
-
-function openEditPopup() {
+const openEditPopup = () => {
   inputName.value = document.querySelector(".profile__title").textContent;
   inputDescription.value = document.querySelector(".profile__description").textContent;
   openModal(profilePopup);
 }
 
-function openImageModal(src, caption){
+export const openImageModal = (src, caption) => {
 	document.querySelector(".popup__image").src = src
 	document.querySelector(".popup__caption").textContent = caption
-
 	openModal(imagePopup)
 }
 
-function handleProfileFormSubmit(evt) {
+const handleProfileFormSubmit = (evt) => {
   evt.preventDefault();
   document.querySelector(".profile__title").textContent = inputName.value;
   document.querySelector(".profile__description").textContent = inputDescription.value;
   closeModal(profilePopup);
 }
 
-function handleNewCardFormSubmit(evt) {
+const handleNewCardFormSubmit = (evt) => {
   evt.preventDefault();
-  placesList.prepend(createCard(inputCardName.value, inputUrl.value));
+  placesList.prepend(createCard(inputCardName.value, inputUrl.value, cardSettings));
   closeModal(cardPopup);
 }
 
 // Инициализация событий
-renderCards();
+renderCards(placesList, cardSettings);
+
+enableValidation(validationSettings);
 
 profilePopupButton.addEventListener("click", openEditPopup);
 
@@ -105,6 +87,7 @@ listCloseButtons.forEach(button => {
 
 listPopups.forEach(popup => {
 	popup.classList.add("popup_is-animated")
+	popup.addEventListener("click", closeModalByOverlay)
 })
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
